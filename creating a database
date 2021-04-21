@@ -1,0 +1,1417 @@
+
+create table job(
+id_job number(6,0)
+constraint joburi_id_job_pk PRIMARY KEY,
+denumire_job varchar2(30)
+constraint joburi_denumire_job_nn NOT NULL
+constraint joburi_denumire_job_unique UNIQUE);
+
+create table locatie(
+id_locatie number(6,0)
+constraint locatii_id_locatie_pk PRIMARY KEY,
+strada varchar2(30)
+constraint locatii_strada_nn NOT NULL,
+numar varchar2(10)
+constraint locatii_numar_nn NOT NULL,
+oras varchar2(30)
+constraint locatii_oras_nn NOT NULL,
+judet varchar2(30),
+sector number(1,0));
+);
+
+create table camin(
+id_camin number(6,0)
+   constraint camine_id_camin_pk PRIMARY KEY,
+nume_camin varchar2(30)
+   constraint camine_nume_camin_nn NOT NULL
+   constraint camine_nume_camin_unique UNIQUE,
+pret number(6,0)
+   constraint camine_pret_nn NOT NULL,
+id_locatie number(6,0)
+   constraint camine_id_locatie_fk REFERENCES 
+locatie( id_locatie )
+   constraint camine_id_locatie_nn NOT NULL,
+nr_locuri number(3,0)
+   constraint camine_nr_locuri_nn not null);
+   
+create table facultate(
+id_facultate number(6,0)
+   constraint facultati_id_facultate_pk PRIMARY KEY,
+nume_facultate varchar2(30)
+   constraint facultati_numenn NOT NULL
+   constraint facultati_nume_unique UNIQUE);
+   
+create table specializare(
+  id_specializare number(6,0)
+     constraint specializari_id_pk primary key,
+  id_facultate number(6,0)
+    constraint specializari_id_fk references facultate(id_facultate)
+    constraint specializari_id_nn not null,
+  nume_specializare varchar2(50)
+   constraint specializari_nume_nn not null);
+
+
+
+create table camera(
+id_camera number(6,0)
+  constraint camere_id_camera_pk primary key,
+id_camin number(6,0)
+  constraint camere_id_camin_fk references camin(id_camin)
+  constraint camere_id_camin_nn not null,
+capacitate number(1,0)
+  constraint camere_capacitate_chk CHECK(capacitate>=1 AND capacitate<=6)
+);
+
+create table angajat(
+id_angajat number(6,0)
+ constraint angajati_id_angajat_pk PRIMARY KEY,
+nume varchar2(50)
+ constraint angajati_nume_nn NOT NULL,
+prenume varchar2(50)
+ constraint angajti_prenume_nn NOT NULL,
+nr_telefon varchar2(10)
+ constraint angajati_nr_telefon_nn NOT NULL
+ constraint angajati_nr_telefon_unique UNIQUE,
+salariu number(5,0)
+  constraint angajati_salariu_nn NOT NULL,
+id_job number(6,0)
+  constraint angajati_id_job_fk references
+  job(id_job)
+  constraint angajati_id_job_nn not null,
+id_sef number(6,0)
+  constraint angajati_id_sef_fk references
+  angajat(id_angajat),
+id_camin number(6,0)
+  constraint angajati_id_camin_fk references 
+  camin(id_camin)
+  constraint angajati_id_camin_nn not null,
+email varchar2(50)
+  constraint angajati_email_unique UNIQUE
+);
+
+create table student(
+id_student number(6,0)
+  constraint studenti_id_student_pk PRIMARY KEY,
+nume varchar2(50)
+  constraint studenti_nume_nn NOT NULL,
+prenume varchar2(50)
+  constraint studenti_prenume_nn NOT NULL,
+nr_telefon varchar2(20)
+  constraint studenti_nr_telefon_nn NOT NULL
+  constraint studenti_nr_telefon_unique UNIQUE,
+email varchar2(50)
+ constraint studenti_email_nn not null
+ constraint studenti_email_unique unique,
+id_specializare number(6,0)
+     constraint studenti_id_specializare_fk REFERENCES specializare(id_specializare)
+     constraint studenti_id_specializare_nn not null
+);
+
+create table istoric_cazare(
+id_student number(6,0)
+  constraint istoric_id_student_fk references student(id_student),
+data_check_in date,
+data_check_out date,
+id_camera number(6,0)
+   constraint istoric_id_camera_fk references student(id_student)
+   constraint istoric_id_camera_nn not null,
+PRIMARY KEY(id_student,data_check_in));
+
+
+
+--JOB
+
+create sequence job_seq_pk MAXVALUE 999999 INCREMENT BY 1
+START WITH 1 NOCACHE ORDER NOCYCLE;
+
+
+INSERT INTO job(
+ id_job,
+ denumire_job)
+ VALUES(
+ job_seq_pk.NEXTVAL,
+ 'administrator');
+ 
+INSERT INTO job(
+ id_job,
+ denumire_job)
+ VALUES(
+ job_seq_pk.NEXTVAL,
+ 'paznic');
+ 
+INSERT INTO job(
+id_job,
+denumire_job)
+VALUES(
+job_seq_pk.NEXTVAL,
+'femeie de serviciu');
+
+
+--LOCATIE
+
+create sequence locatie_seq_pk MAXVALUE 999999 INCREMENT BY 1
+START WITH 1 NOCACHE ORDER NOCYCLE;
+
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Splaiul Independentei',
+ '204',
+ 'Bucuresti',
+ 6);
+ 
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Soseaua Panduri',
+ '90',
+ 'Bucuresti',
+ 5);
+ 
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Bd. Mihail Kogalniceanu',
+ '36-46',
+ 'Bucuresti',
+ 5);
+ 
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Strada Jiului',
+ '163',
+ 'Bucuresti',
+ 1);
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Bd. Theodor Pallady',
+ '22-26',
+ 'Bucuresti',
+ 3);
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Str. Pictor Stefan Dumitrescu',
+ '35',
+ 'Bucuresti',
+ 4);
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Sos. Fundeni',
+ '252-254',
+ 'Bucuresti',
+ 2);
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+judet)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Str. Fizicienilor',
+ '1-9',
+ 'Magurele',
+ 'Ilfov');
+ 
+INSERT INTO locatie(
+id_locatie,
+strada,
+numar,
+oras,
+sector)
+VALUES(
+ locatie_seq_pk.NEXTVAL,
+ 'Bd. Iuliu Maniu',
+ '1-3',
+ 'Bucuresti',
+ 6);
+ 
+ 
+ --CAMIN
+ 
+create sequence camin_seq_pk MAXVALUE 999999 INCREMENT BY 1
+START WITH 1 NOCACHE ORDER NOCYCLE;
+
+--complex grozavesti
+INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin A Grozavesti',
+ 120,
+ locatie_seq_pk.CURRVAL-8,
+ 516);
+ 
+INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin B Grozavesti',
+ 120,
+ locatie_seq_pk.CURRVAL-8,
+ 516);
+ 
+INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin C Grozavesti',
+ 120,
+ locatie_seq_pk.CURRVAL-8,
+ 516);
+ 
+INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin D Grozavesti',
+ 120,
+ locatie_seq_pk.CURRVAL-8,
+ 468);
+ 
+INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin A1 Grozavesti',
+ 130,
+ locatie_seq_pk.CURRVAL-8,
+ 284);
+ 
+ --gaudeamus
+ INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Caminul Gaudeamus',
+ 120,
+ locatie_seq_pk.CURRVAL-7,
+ 100);
+ 
+ --mihail kogalniceanu
+ INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Complex Mihail Kogalniceanu',
+ 120,
+ locatie_seq_pk.CURRVAL-6,
+ 598);
+ 
+ --poligrafie
+ INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Caminul Poligrafie',
+ 115,
+ locatie_seq_pk.CURRVAL-5,
+ 244);
+ 
+ --theodor pallady
+ INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin Theodor Pallady 2',
+ 130,
+ locatie_seq_pk.CURRVAL-4,
+ 190);
+ INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin Theodor Pallady 1',
+ 125,
+ locatie_seq_pk.CURRVAL-4,
+ 215);
+--stoian militaru
+ INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Caminul Stoian Militaru',
+ 120,
+ locatie_seq_pk.CURRVAL-3,
+ 417);
+ 
+--fundeni
+ INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Caminul Fundeni',
+ 125,
+ locatie_seq_pk.CURRVAL-2,
+ 204);
+ 
+--magurele
+INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Complex Magurele',
+ 120,
+ locatie_seq_pk.CURRVAL-1,
+ 774);
+ 
+--C-Leu
+INSERT INTO camin(
+ id_camin,
+ nume_camin,
+ pret,
+ id_locatie,
+ nr_locuri)
+VALUES(
+ camin_seq_pk.NEXTVAL,
+ 'Camin C-Leu',
+ 200,
+ locatie_seq_pk.CURRVAL,
+ 244);
+ 
+ --ANGAJATI
+
+ create sequence angajat_seq_pk MAXVALUE 999999 INCREMENT BY 1
+START WITH 1 NOCACHE ORDER NOCYCLE;
+
+--grozavesti
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  email)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Apostol',
+  'Paraschiva',
+  '0213188858',
+  4500,
+  1,
+  1,
+  'paraschivaapostol@unibuc.ro'
+  );
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Ionescu',
+  'Ioana',
+  '0766677777',
+  2500,
+  3,
+  1,
+  1);
+
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Ionescu',
+  'Mihaela',
+  '0766677977',
+  2500,
+  3,
+  1,
+  1);
+  
+ INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Ionescu',
+  'Ion',
+  '0766677987',
+  2700,
+  2,
+  1,
+  1); 
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  email)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Iordache',
+  'Eugen',
+  '0213135637',
+  4500,
+  1,
+  2,
+  'iordacheeugen@unibuc.ro'
+  );
+
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Popescu',
+  'Mihaela',
+  '0769677977',
+  2500,
+  3,
+  2,
+  5);
+  
+ INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Popescu',
+  'Ion',
+  '0722277987',
+  2700,
+  2,
+  2,
+  5); 
+ 
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  email)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Dufala',
+  'Victoria',
+  '0213181561',
+  4500,
+  1,
+  3,
+  'dufalavictoria@unibuc.ro'
+  );
+  
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Cruceru',
+  'Eugenia',
+  '0723355555',
+  2500,
+  3,
+  3,
+  8
+  );
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Crugeru',
+  'Eugen',
+  '0777777777',
+  2700,
+  2,
+  3,
+  8);
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  email)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Ungureanu',
+  'Mircea',
+  '0213181560',
+  4500,
+  1,
+  4,
+  'ungureanumircea@unibuc.ro'
+  );
+  
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Iordache',
+  'Izabela',
+  '0799999997',
+  2500,
+  3,
+  4,
+  11
+  );
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+ angajat_seq_pk.NEXTVAL,
+  'Iordache',
+  'Matei',
+  '0799998997',
+  2700,
+  2,
+  4,
+  11
+  );
+  
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  email)
+VALUES(
+ angajat_seq_pk.NEXTVAL,
+  'Pascu',
+  'Cherata',
+  '0213114432',
+  4500,
+  1,
+  5,
+  'cheratapascu@unibuc.ro'
+  );
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Iordache',
+  'Iulia',
+  '0749999997',
+  2500,
+  3,
+  5,
+  14
+  );
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Iordache',
+  'Marian',
+  '0799997997',
+  2700,
+  2,
+  5,
+  14
+  );
+
+--gaudeamus
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  email)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Vlaicu',
+  'Valentin',
+  '0213175214',
+  4500,
+  1,
+  6,
+  'valentinvlaicu@unibuc.ro'
+  );
+
+
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Vlasceanu',
+  'Marian',
+  '0799697997',
+  2700,
+  2,
+  6,
+  17
+  );
+  
+INSERT INTO angajat(
+  id_angajat,
+  nume,
+  prenume,
+  nr_telefon,
+  salariu,
+  id_job,
+  id_camin,
+  id_sef)
+VALUES(
+  angajat_seq_pk.NEXTVAL,
+  'Iordache',
+  'Mirabela',
+  '0795997997',
+  2500,
+  3,
+  6,
+  17
+  );
+  
+--facultate
+
+create sequence fac_seq_pk MAXVALUE 999999 INCREMENT BY 1
+START WITH 1 NOCACHE ORDER NOCYCLE;
+
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Administratie si Afaceri');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Biologie');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Chimie');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Drept');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Filosofie');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Fizica');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Geografie');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Geologie si Geofizica');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Istorie');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Jurnalism');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Limbi si Literaturi Straine');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Litere');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Matematica si Informatica');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Psihologie');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Sociologie');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Stiinte Politice');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Teologie Baptista');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Teologie Ortodoxa');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Teologie Romano-Catolica');
+  
+INSERT INTO facultate(
+  id_facultate,
+  nume_facultate)
+VALUES(
+  fac_seq_pk.NEXTVAL,
+  'Educatie Fizica si Sport');
+  
+--specializare
+
+create sequence spec_seq_pk MAXVALUE 999999 INCREMENT BY 1
+START WITH 1 NOCACHE ORDER NOCYCLE;
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-19,
+ 'Administratie Publica');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-19,
+ 'Administrarea Afacerilor');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-19,
+ 'Marketing');
+ 
+ INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-18,
+ 'Anatomie,Biologie,Fiziologie Animala si Biofizica');
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-18,
+ 'Biochimie si Biologie Moleculara');
+ 
+ INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-18,
+ 'Ecologie Sistemica si Sustenabilitate');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-18,
+ 'Genetica');
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-18,
+ 'Botanica si Microbiologie');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-17,
+ 'Chimie Anorganica');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-17,
+ 'Chimie Analitica');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-16,
+ 'Drept European');
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-16,
+ 'Dreptul Afacerilor');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-16,
+ 'Criminalistica');
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-15,
+ 'Filosofie');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-15,
+ 'Filosofie si Studii Europene');
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-14,
+ 'Fizica');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-14,
+ 'Fizica informatica');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-14,
+ 'Fizica medicala');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-13,
+ 'Geografia Turismului');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-13,
+ 'Cartografie');
+
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-12,
+ 'Geologie');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-12,
+ 'Inginerie Geologica');
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-11,
+ 'Istorie');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-11,
+ 'Istoria Artei');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-10,
+ 'Publicitate');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-10,
+ 'Jurnalism');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-9,
+ 'Filologie');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-9,
+ 'Traducere si interpretare');
+  
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-9,
+ 'Limbi moderne aplicate');
+
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-8,
+ 'Filologie');
+ 
+INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-8,
+ 'Limba si Literatura');
+ 
+ INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-7,
+ 'Matematica');
+ INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-7,
+ 'Informatica');
+ INSERT INTO specializare(
+ id_specializare,
+ id_facultate,
+ nume_specializare)
+VALUES(
+ spec_seq_pk.NEXTVAL,
+ fac_seq_pk.CURRVAL-7,
+ 'CTI');
+ 
+ --STUDENT
+ CREATE SEQUENCE stud_seq_pk MAXVALUE 999999 
+ INCREMENT BY 1 START WITH 1 NOCACHE ORDER NOCYCLE;
+ 
+ INSERT INTO student(
+ id_student,
+ nume,
+ prenume,
+ nr_telefon,
+ email,
+ id_specializare)
+VALUES(
+ stud_seq_pk.NEXTVAL,
+ 'Marinescu',
+ 'Adina',
+ '0785682555',
+ 'adina_marinescu@unibuc.ro',
+ 13);
+ 
+ INSERT INTO student(
+ id_student,
+ nume,
+ prenume,
+ nr_telefon,
+ email,
+ id_specializare)
+VALUES(
+ stud_seq_pk.NEXTVAL,
+ 'Popa',
+ 'Dragos',
+ '0785662555',
+ 'popa_dragos@unibuc.ro',
+ 1);
+
+
+
+--camera
+
+INSERT INTO camera(
+  id_camera,
+  id_camin,
+  capacitate)
+VALUES(
+  1,
+ 1,
+ 1);
+ 
+INSERT INTO camera(
+  id_camera,
+  id_camin,
+  capacitate)
+VALUES(
+  2,
+ 1,
+ 1); 
+ --istoric cazare
+
+
+INSERT INTO istoric_cazare(
+  id_student,
+  data_check_in,
+  data_check_out,
+  id_camera)
+VALUES(
+  1,
+ to_date('1/10/2018','dd/mm/yyyy'),
+ to_date('15/07/2019','dd/mm/yyyy'),
+ 1); 
+INSERT INTO istoric_cazare(
+  id_student,
+  data_check_in,
+  data_check_out,
+  id_camera)
+VALUES(
+  1,
+ to_date('1/10/2019','dd/mm/yyyy'),
+ to_date('15/07/2020','dd/mm/yyyy'),
+ 2);
+INSERT INTO istoric_cazare(
+  id_student,
+  data_check_in,
+  id_camera)
+VALUES(
+  1,
+ to_date('1/10/2020','dd/mm/yyyy'),
+ 1);
+ 
+ INSERT INTO istoric_cazare(
+  id_student,
+  data_check_in,
+  data_check_out,
+  id_camera)
+VALUES(
+  2,
+ to_date('1/10/2019','dd/mm/yyyy'),
+ to_date('16/07/2020','dd/mm/yyyy'),
+ 1);
+ 
+ INSERT INTO istoric_cazare(
+  id_student,
+  data_check_in,
+  id_camera)
+VALUES(
+  2,
+ to_date('1/10/2020','dd/mm/yyyy'),
+ 2);
+ 
+
+commit;
